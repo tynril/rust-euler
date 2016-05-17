@@ -14,20 +14,31 @@ fn is_palindrome(n: u64) -> bool {
 }
 
 fn find_biggest_palindrome(from: u64, to:u64) -> Option<u64> {
-    let mut n = 0u64;
-    for i in (from..to + 1).rev() {
+    let (mut i, mut n) = (to, 0u64);
+    let mut j;
+    
+    while i >= from {
         // Early out if this i has no chance to beat our current
         // maximum palindrome.
-        if i * (to + 1) < n {
+        if i * to < n {
             break;
         }
         
-        for j in (from..to + 1).rev() {
+        j = to;
+        while j >= from {
             let value: u64 = i * j;
-            if value > n && is_palindrome(value) {
+            if value < n {
+                break;
+            }
+            
+            if is_palindrome(value) {
                 n = value;
             }
+            
+            j -= 1;
         }
+        
+        i -= 1;
     }
     
     if n > 0 {
